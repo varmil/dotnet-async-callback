@@ -19,9 +19,9 @@ namespace AsyncApp
             // --------------------------------------
             // Task（非同期） と Parallel（データ並列） の違いを検証
 
-            LoopByFor();
+            //LoopByFor();
 
-            // LoopByParallelFor();
+            LoopByParallelFor();
 
             // --------------------------------------
 
@@ -32,7 +32,9 @@ namespace AsyncApp
             Console.ReadLine();
         }
 
+        // StartAsyncTaskで Thread.Sleep() を使った場合：
         // メインスレッドは空けながら、大体CPUと同じ分だけのスレッド（8つずつ）処理が進んでいく。
+        // Task.Delay() の場合両者に違いはない。
         private static void LoopByFor()
         {
             for (int i = 0; i < loopNum; i++)
@@ -41,7 +43,9 @@ namespace AsyncApp
             }
         }
 
+        // StartAsyncTaskで Thread.Sleep() を使った場合：
         // 一気に100スレッド立ったりはしないが、8つずつ処理が進んで100ループ終わるまでメインスレッドには戻らない。
+        // Task.Delay() の場合両者に違いはない。
         private static void LoopByParallelFor()
         {
             Parallel.For(0, loopNum, (i) =>

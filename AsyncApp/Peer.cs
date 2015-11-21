@@ -14,13 +14,14 @@ namespace AsyncApp
             var callbackId = CallbackContainer.Instance.Add(callback);
 
             // ここで仮に Parallel.Invoke() を使うと、3秒待ってから「Amazing」出力される＝待つ
-            // 対してタスクはスレッドプールにキューを積んだら直ぐにメインスレッドに処理を返す
-            await Task.Run(() =>
+            // 対してタスクはawaitを書くことでコルーチンのyield returnのような扱いになる。
+            // つまり、グローバルキューに積んだらメインスレッドに処理を返す
+            await Task.Run(async () =>
             {
                 //
-                // 通信しているつもり
+                // 通信しているつもり（待機可能というより非同期実行が可能というイメージ）
                 //
-                System.Threading.Thread.Sleep(3000);
+                await Task.Delay(3000);
 
                 // 通信が終わったと仮定してレスポンスハンドラを呼び出す。
                 ResponseObject response = new ResponseObject() { CallbackId = callbackId };
