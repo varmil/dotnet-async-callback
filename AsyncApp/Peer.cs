@@ -13,6 +13,8 @@ namespace AsyncApp
             // コールバックをコンテナに突っ込む
             var callbackId = CallbackContainer.Instance.Add(callback);
 
+            // ここで仮に Parallel.Invoke() を使うと、3秒待ってから「Amazing」出力される＝待つ
+            // 対してタスクはスレッドプールにキューを積んだら直ぐにメインスレッドに処理を返す
             await Task.Run(() =>
             {
                 //

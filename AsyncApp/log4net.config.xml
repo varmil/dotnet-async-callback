@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <log4net>
+        <!-- Output to console -->
+        <appender name="VSAppender" type="log4net.Appender.DebugAppender">
+            <layout type="log4net.Layout.PatternLayout">
+                <conversionPattern value="[%thread] %-5level %logger %ndc - %message%newline" />
+            </layout>
+        </appender>
+
+        <!-- Set root logger level to DEBUG and its only appender to VSAppender -->
+        <root>
+            <level value="DEBUG" />
+            <appender-ref ref="VSAppender" />
+        </root>
+    </log4net>
+</configuration>
