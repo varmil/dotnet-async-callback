@@ -3,11 +3,14 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using log4net;
 
 namespace AsyncApp
 {
     public class Peer
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public async void SendRequest<T>(T param, Action<ResponseObject> callback)
         {
             // コールバックをコンテナに突っ込む
@@ -27,6 +30,9 @@ namespace AsyncApp
                 ResponseObject response = new ResponseObject() { CallbackId = callbackId };
                 this.OnResponse(response);
             });
+
+            // awaitする場合はこれが後。しない場合はこれが先。
+            log.Info("SendRequest after Task.Run()");
         }
 
         private void OnResponse(ResponseObject response)

@@ -10,7 +10,7 @@ namespace AsyncApp
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly int loopNum = 100;
+        private static readonly int loopNum = 1;
 
         static void Main(string[] args)
         {
@@ -19,13 +19,13 @@ namespace AsyncApp
             // --------------------------------------
             // Task（非同期） と Parallel（データ並列） の違いを検証
 
-            //LoopByFor();
+            LoopByFor();
 
-            LoopByParallelFor();
+            //LoopByParallelFor();
 
             // --------------------------------------
 
-            // Taskは待たない（メインスレッドに処理を戻す）ので、こちらが先に実行される
+            // Taskはスレッド開放する（メインスレッドに処理を戻す）ので、こちらが先に実行される
             log.InfoFormat("Amazing !");
 
             // コンソールを終了させない
@@ -66,6 +66,8 @@ namespace AsyncApp
             {
                 log.InfoFormat("Response got! callback id: {0}", response.CallbackId);
             });
+
+            // TODO 直列リクエストをcallback地獄以外の表現で。（Promiseとか）
         }
     }
 }
