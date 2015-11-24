@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.Linq;
 using System.Collections.Concurrent;
 
@@ -7,9 +7,11 @@ namespace AsyncApp
 {
     public sealed class CallbackContainer
     {
-        private ConcurrentDictionary<string, Action<ResponseObject>> Container = new ConcurrentDictionary<string, Action<ResponseObject>>();
+        private ConcurrentDictionary<int, Action<ResponseObject>> Container = new ConcurrentDictionary<int, Action<ResponseObject>>();
 
         private static CallbackContainer instance = new CallbackContainer();
+
+        private int idConter = 0;
 
         public static CallbackContainer Instance
         {
@@ -24,9 +26,9 @@ namespace AsyncApp
 
         }
 
-        public string Add(Action<ResponseObject> callback)
+        public int Add(Action<ResponseObject> callback)
         {
-            var id = Guid.NewGuid().ToString();
+            var id = Interlocked.Increment(ref idConter);
 
             Container.AddOrUpdate(id, callback, (key, oldValue) =>
             {
@@ -36,7 +38,7 @@ namespace AsyncApp
             return id;
         }
 
-        public Action<ResponseObject> Get(string id)
+        public Action<ResponseObject> Get(int id)
         {
             return Container.GetOrAdd(id, (key) =>
             {

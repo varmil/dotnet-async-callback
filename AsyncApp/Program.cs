@@ -10,7 +10,7 @@ namespace AsyncApp
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly int loopNum = 1;
+        private static readonly int loopNum = 3;
 
         static void Main(string[] args)
         {
@@ -35,11 +35,11 @@ namespace AsyncApp
         // StartAsyncTaskで Thread.Sleep() を使った場合：
         // メインスレッドは空けながら、大体CPUと同じ分だけのスレッド（8つずつ）処理が進んでいく。
         // Task.Delay() の場合両者に違いはない。
-        private static void LoopByFor()
+        private static async void LoopByFor()
         {
             for (int i = 0; i < loopNum; i++)
             {
-                StartAsyncTask();
+                await StartAsyncTask();
             }
         }
 
@@ -48,26 +48,17 @@ namespace AsyncApp
         // Task.Delay() の場合両者に違いはない。
         private static void LoopByParallelFor()
         {
-            Parallel.For(0, loopNum, (i) =>
+            Parallel.For(0, loopNum, async (i) =>
             {
-                StartAsyncTask();
+                await StartAsyncTask();
             });
         }
 
-        private static void StartAsyncTask()
+        private static async Task StartAsyncTask()
         {
-            var peer = new Peer();
-
-            // 非同期処理の開始
-            string param = "Hello World";
-
-            // レスポンスまで3秒かかる
-            peer.SendRequest<string>(param, (response) =>
-            {
-                log.InfoFormat("Response got! callback id: {0}", response.CallbackId);
-            });
-
-            // TODO 直列リクエストをcallback地獄以外の表現で。（Promiseとか）
+            ResponseObject response;
+            response = await new Model().Fetch();
+            log.InfoFormat("CALLBACK ID: {0}", response.CallbackId);
         }
     }
 }

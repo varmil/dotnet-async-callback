@@ -7,6 +7,6 @@ namespace AsyncApp
 {
     public class ResponseObject
     {
-        public string CallbackId { get; set; }
+        public int CallbackId { get; set; }
     }
 }
